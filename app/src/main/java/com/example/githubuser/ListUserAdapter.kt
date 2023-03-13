@@ -1,9 +1,11 @@
 package com.example.githubuser
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
@@ -23,6 +25,14 @@ class ListUserAdapter(private val listUser: List<ItemsItem>) : RecyclerView.Adap
             .load(userLogin.avatarUrl)
             .into(viewHolder.photoUser)
         viewHolder.nameUser.text = userLogin.login
+
+        viewHolder.itemView.setOnClickListener{
+            val intentDetail = Intent(viewHolder.itemView.context, DetailUserActivity::class.java)
+            intentDetail.putExtra(DetailUserActivity.USER, userLogin.login)
+            viewHolder.itemView.context.startActivity(intentDetail)
+        }
+
+
     }
 
     override fun getItemCount() = listUser.size

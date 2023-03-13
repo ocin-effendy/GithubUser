@@ -13,6 +13,8 @@ class MainViewModel : ViewModel() {
     private val _githubUser = MutableLiveData<ResponseGithub>()
     val githubUser : LiveData<ResponseGithub> = _githubUser
 
+
+
     private val _githubListUser = MutableLiveData<List<ItemsItem>>()
     val githubListUser : LiveData<List<ItemsItem>> = _githubListUser
 
@@ -22,9 +24,11 @@ class MainViewModel : ViewModel() {
     companion object{
         private const val TAG = "MainViewModel"
     }
+
     init {
         dataListUser()
     }
+
     private fun dataListUser(){
         _isLoading.value = true
         val client = ApiConfig.getApiService().getListUser()
@@ -57,7 +61,6 @@ class MainViewModel : ViewModel() {
                 _isLoading.value = false
                 if (response.isSuccessful) {
                     val item = response.body()
-                    Log.i(TAG, item.toString())
                     _githubUser.value = item
                 } else {
                     Log.i(TAG, "Data Not Found")
@@ -69,6 +72,8 @@ class MainViewModel : ViewModel() {
             }
         })
     }
+
+
 
 
 }

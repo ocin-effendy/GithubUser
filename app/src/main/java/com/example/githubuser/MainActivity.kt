@@ -42,8 +42,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setDataList(item: List<ItemsItem>){
-        Log.i("list", "masuk ke set data list")
-
         val adapter = ListUserAdapter(item)
         binding.viewCard.adapter = adapter
     }
