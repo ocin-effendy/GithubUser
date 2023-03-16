@@ -13,17 +13,12 @@ class MainViewModel : ViewModel() {
     private val _githubUser = MutableLiveData<ResponseGithub>()
     val githubUser : LiveData<ResponseGithub> = _githubUser
 
-
-
     private val _githubListUser = MutableLiveData<List<ItemsItem>>()
     val githubListUser : LiveData<List<ItemsItem>> = _githubListUser
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    companion object{
-        private const val TAG = "MainViewModel"
-    }
 
     init {
         dataListUser()
@@ -73,7 +68,8 @@ class MainViewModel : ViewModel() {
         })
     }
 
-
-
+    companion object{
+        private const val TAG = "MainViewModel"
+    }
 
 }

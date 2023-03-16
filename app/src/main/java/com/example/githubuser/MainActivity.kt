@@ -23,9 +23,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         showRecyclerList()
 
-        val mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
+        val mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]
 
         mainViewModel.githubListUser.observe(this){ item ->
             setDataList(item)
@@ -42,18 +43,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setDataList(item: List<ItemsItem>){
+        Log.i("niko", item.toString())
         val adapter = ListUserAdapter(item)
         binding.viewCard.adapter = adapter
     }
 
 
-    private fun showLoading(isLoading: Boolean) {
-        if (isLoading) {
-            binding.progressBar.visibility = View.VISIBLE
-        } else {
-            binding.progressBar.visibility = View.GONE
-        }
-    }
+    private fun showLoading(state: Boolean) { binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE }
 
     private fun showRecyclerList() {
         val layoutManager = LinearLayoutManager(this)
@@ -63,7 +59,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
+        val mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]
         fun searchUser(username: String){
             mainViewModel.dataGithubUser(username)
             mainViewModel.githubUser.observe(this@MainActivity){ item ->
