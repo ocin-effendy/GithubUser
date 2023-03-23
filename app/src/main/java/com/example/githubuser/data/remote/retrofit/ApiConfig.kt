@@ -1,5 +1,6 @@
-package com.example.githubuser
+package com.example.githubuser.data.remote.retrofit
 
+import com.example.githubuser.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

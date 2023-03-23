@@ -1,55 +1,57 @@
-package com.example.githubuser
+package com.example.githubuser.ui
 
 import android.app.SearchManager
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.githubuser.data.remote.response.ItemsItem
+import com.example.githubuser.R
+import com.example.githubuser.data.remote.response.ResponseGithub
+import com.example.githubuser.adapter.ListUserAdapter
 import com.example.githubuser.databinding.ActivityMainBinding
+import com.example.githubuser.data.Result
 
+@Suppress("UNCHECKED_CAST")
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var mainViewModel: MainViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
         showRecyclerList()
 
-        val mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]
 
-        mainViewModel.githubListUser.observe(this){ item ->
-            setDataList(item)
-        }
-        mainViewModel.isLoading.observe(this) {
-            showLoading(it)
+        mainViewModel = viewModels<MainViewModel> {
+            ViewModelFactory.getInstance(application)
+        }.value
+
+        mainViewModel.githubListUser.observe(this){ result ->
+            if(result != null){
+                observeResult(result)
+            }
         }
 
     }
 
-    private fun setData(item: ResponseGithub){
-        val adapter = ListUserAdapter(item.items)
+    private fun setData(items: List<ItemsItem>) {
+        val adapter = ListUserAdapter(items)
         binding.viewCard.adapter = adapter
     }
 
-    private fun setDataList(item: List<ItemsItem>){
-        Log.i("niko", item.toString())
-        val adapter = ListUserAdapter(item)
+    private fun setData(response: ResponseGithub) {
+        val adapter = ListUserAdapter(response.items)
         binding.viewCard.adapter = adapter
     }
-
-
-    private fun showLoading(state: Boolean) { binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE }
 
     private fun showRecyclerList() {
         val layoutManager = LinearLayoutManager(this)
@@ -59,11 +61,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]
+
         fun searchUser(username: String){
-            mainViewModel.dataGithubUser(username)
-            mainViewModel.githubUser.observe(this@MainActivity){ item ->
-                setData(item)
+            mainViewModel.getSearchDataUser(username)
+            mainViewModel.githubUser.observe(this@MainActivity){ result ->
+                if(result != null){
+                    observeResult(result)
+                }
             }
         }
         val inflater = menuInflater
@@ -90,8 +94,23 @@ class MainActivity : AppCompatActivity() {
         })
         return true
     }
-
-
-
-
+    private fun observeResult(result: Result<*>) {
+        when(result) {
+            is Result.Loading -> {
+                binding.progressBar.visibility = View.VISIBLE
+            }
+            is Result.Success -> {
+                binding.progressBar.visibility = View.GONE
+                val data = result.data
+                if(data is ResponseGithub) {
+                    setData(data)
+                } else if(data is List<*>) {
+                    setData(data as List<ItemsItem>)
+                }
+            }
+            is Result.Error -> {
+                binding.progressBar.visibility = View.GONE
+            }
+        }
+    }
 }

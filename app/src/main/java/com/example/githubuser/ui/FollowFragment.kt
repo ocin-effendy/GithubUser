@@ -1,4 +1,4 @@
-package com.example.githubuser
+package com.example.githubuser.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -6,9 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.githubuser.data.remote.response.ItemsItem
+import com.example.githubuser.adapter.ListUserAdapter
+import com.example.githubuser.data.Result
 import com.example.githubuser.databinding.FragmentFollowBinding
 
 
@@ -16,6 +19,7 @@ class FollowFragment : Fragment() {
     private lateinit var binding: FragmentFollowBinding
     private var position: Int = 0
     private var username: String? = null
+    private lateinit var followViewModel: FollowViewModel
 
 
     override fun onCreateView(
@@ -27,12 +31,21 @@ class FollowFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.root.requestLayout()
+    }
+
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showRecyclerList()
 
-        val followViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(FollowViewModel::class.java)
+        followViewModel = viewModels<FollowViewModel> {
+            ViewModelFactory.getInstance(requireActivity())
+        }.value
+
+
 
         arguments?.let {
             position = it.getInt(ARG_POSITION)
@@ -40,25 +53,42 @@ class FollowFragment : Fragment() {
         }
 
         if (position == 1){
-            username?.let { followViewModel.followerListUser(it) }
-            followViewModel.followerUser.observe(viewLifecycleOwner){ item ->
-                setDataList(item)
+            username?.let { followViewModel.getDataFollowers(it) }
+            followViewModel.followerUser.observe(viewLifecycleOwner){ result ->
+                if(result != null){
+                    observeResult(result)
+                }
             }
         } else {
-            username?.let { followViewModel.followingListUser(it) }
-            followViewModel.followingUser.observe(viewLifecycleOwner){ item ->
-                setDataList(item)
+            username?.let { followViewModel.getDataFollowing(it) }
+            followViewModel.followingUser.observe(viewLifecycleOwner){ result ->
+                if(result != null){
+                    observeResult(result)
+                }
             }
         }
 
-        followViewModel.isLoading.observe(requireActivity()) {
-            showLoading(it)
-        }
     }
 
     private fun setDataList(item: List<ItemsItem>){
         val adapter = ListUserAdapter(item)
         binding.followCard.adapter = adapter
+    }
+
+    private fun observeResult(result: Result<List<ItemsItem>>) {
+        when(result) {
+            is Result.Loading -> {
+                binding.progressBar.visibility = View.VISIBLE
+            }
+            is Result.Success -> {
+                binding.progressBar.visibility = View.GONE
+                val data = result.data
+                setDataList(data)
+            }
+            is Result.Error -> {
+                binding.progressBar.visibility = View.GONE
+            }
+        }
     }
 
 
@@ -69,8 +99,6 @@ class FollowFragment : Fragment() {
         val itemDecoration = DividerItemDecoration(requireActivity(), layoutManager.orientation)
         binding.followCard.addItemDecoration(itemDecoration)
     }
-
-    private fun showLoading(state: Boolean) { binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE }
 
     companion object {
         const val ARG_POSITION = "POSITION"
