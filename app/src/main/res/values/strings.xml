@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Github User</string>
     <string name="search">Search</string>
+    <string name="favorite">Favorite</string>
+    <string name="setting">Setting</string>
     <string name="search_hint">Masukkan kata</string>
     <string name="name_profile">Name Profile</string>
     <string name="login_profile">Login Profile</string>

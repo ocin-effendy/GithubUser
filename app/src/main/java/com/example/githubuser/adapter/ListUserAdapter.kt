@@ -23,6 +23,8 @@ class ListUserAdapter(private val listUser: List<ItemsItem>) : RecyclerView.Adap
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val userLogin = listUser[position]
+
+
         Glide.with(viewHolder.itemView.context)
             .load(userLogin.avatarUrl)
             .into(viewHolder.photoUser)
@@ -31,6 +33,7 @@ class ListUserAdapter(private val listUser: List<ItemsItem>) : RecyclerView.Adap
         viewHolder.itemView.setOnClickListener{
             val intentDetail = Intent(viewHolder.itemView.context, DetailUserActivity::class.java)
             intentDetail.putExtra(DetailUserActivity.USER, userLogin.login)
+            intentDetail.putExtra(DetailUserActivity.AVATARURL, userLogin.avatarUrl)
             viewHolder.itemView.context.startActivity(intentDetail)
         }
     }

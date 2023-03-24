@@ -2,9 +2,11 @@ package com.example.githubuser.ui
 
 import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import android.widget.Toast
@@ -94,6 +96,20 @@ class MainActivity : AppCompatActivity() {
         })
         return true
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.favorite ->{
+                val i = Intent(this, FavoriteUserActivity::class.java)
+                startActivity(i)
+                true
+            }
+            else -> true
+        }
+
+
+    }
+
     private fun observeResult(result: Result<*>) {
         when(result) {
             is Result.Loading -> {

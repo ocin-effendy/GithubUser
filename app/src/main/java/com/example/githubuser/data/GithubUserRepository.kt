@@ -37,6 +37,8 @@ class GithubUserRepository private constructor(
         }
     }
 
+    fun getAllFavoriteUser(): LiveData<List<FavoriteUser>> = favoriteUserDao.getAllFavoriteUser()
+
 
     private fun <T> makeApiCall(apiCall: Call<T>): LiveData<Result<T>> {
         val result = MutableLiveData<Result<T>>()

@@ -24,6 +24,7 @@ import kotlinx.coroutines.*
 class DetailUserActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailUserBinding
     private lateinit var fab: FloatingActionButton
+    private lateinit var detailViewModel: DetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,11 +32,11 @@ class DetailUserActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val name = intent.getStringExtra(USER)
-        var avatarUrl = ""
+        val avatarUrl = intent.getStringExtra(AVATARURL)
 
-        val detailViewModel by viewModels<DetailViewModel> {
+        detailViewModel = viewModels<DetailViewModel> {
             ViewModelFactory.getInstance(application)
-        }
+        }.value
         detailViewModel.getDetailDataUser(name!!)
 
         detailViewModel.githubDetailUser.observe(this){ result ->
@@ -47,7 +48,6 @@ class DetailUserActivity : AppCompatActivity() {
                     is Result.Success -> {
                         binding.progressBar.visibility = View.GONE
                         val data = result.data
-                        avatarUrl = data.avatarUrl.toString()
                         setDataDetailUser(data)
                     }
                     is Result.Error -> {
@@ -99,7 +99,7 @@ class DetailUserActivity : AppCompatActivity() {
         val drawable = if (isFavorite) R.drawable.ic_baseline_favorite_24 else R.drawable.ic_baseline_favorite_border_24
         fab.setImageDrawable(ContextCompat.getDrawable(fab.context, drawable))
     }
-    
+
     @SuppressLint("SetTextI18n")
     private fun setDataDetailUser(item: DetailUserResponse){
         Glide.with(this)
@@ -111,8 +111,24 @@ class DetailUserActivity : AppCompatActivity() {
         binding.followingUser.text = "${item.following} Following"
     }
 
+    override fun onResume() {
+        super.onResume()
+        val name = intent.getStringExtra(USER)
+        val avatarUrl = intent.getStringExtra(AVATARURL)
+        val dataFavorite = FavoriteUser(
+            name!!,
+            avatarUrl
+        )
+        detailViewModel.getFavoriteUser(dataFavorite) { isFavorite ->
+            runOnUiThread {
+                setFavoriteButtonImage(isFavorite)
+            }
+        }
+    }
+
     companion object {
         const val USER = "USER"
+        const val AVATARURL ="AVATARURL"
         @StringRes
         private val TAB_POSITION = intArrayOf(
             R.string.tab_text_1,
