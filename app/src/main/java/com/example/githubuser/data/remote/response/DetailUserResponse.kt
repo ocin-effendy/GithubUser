@@ -68,8 +68,8 @@ data class DetailUserResponse(
 //	@field:SerializedName("public_gists")
 //	val publicGists: Int? = null,
 
-	@field:SerializedName("url")
-	val url: String? = null,
+//	@field:SerializedName("url")
+//	val url: String? = null,
 
 //	@field:SerializedName("received_events_url")
 //	val receivedEventsUrl: String? = null,

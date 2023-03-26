@@ -18,5 +18,4 @@ class MainViewModel(private val githubUserRepository: GithubUserRepository) : Vi
     }
 
     fun getAllFavoriteUser() = githubUserRepository.getAllFavoriteUser()
-
 }

@@ -11,6 +11,8 @@ import android.view.View
 import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuser.data.remote.response.ItemsItem
@@ -20,11 +22,10 @@ import com.example.githubuser.adapter.ListUserAdapter
 import com.example.githubuser.databinding.ActivityMainBinding
 import com.example.githubuser.data.Result
 
-@Suppress("UNCHECKED_CAST")
+@Suppress("DEPRECATION", "COMPATIBILITY_WARNING", "UNCHECKED_CAST")
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,17 +33,25 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         showRecyclerList()
 
+        val pref = SettingPreferences.getInstance(dataStore)
+        val settingViewModel = ViewModelProvider(this, ViewModelFactorySetting(pref))[SettingViewModel::class.java]
+
+        settingViewModel.getThemeSettings().observe(this
+        ) { isDarkModeActive: Boolean ->
+            if (isDarkModeActive) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
 
         mainViewModel = viewModels<MainViewModel> {
             ViewModelFactory.getInstance(application)
         }.value
 
         mainViewModel.githubListUser.observe(this){ result ->
-            if(result != null){
-                observeResult(result)
-            }
+            observeResult(result)
         }
-
     }
 
     private fun setData(items: List<ItemsItem>) {
@@ -67,9 +76,7 @@ class MainActivity : AppCompatActivity() {
         fun searchUser(username: String){
             mainViewModel.getSearchDataUser(username)
             mainViewModel.githubUser.observe(this@MainActivity){ result ->
-                if(result != null){
-                    observeResult(result)
-                }
+                observeResult(result)
             }
         }
         val inflater = menuInflater
@@ -104,10 +111,13 @@ class MainActivity : AppCompatActivity() {
                 startActivity(i)
                 true
             }
+            R.id.setting ->{
+                val i = Intent(this, SettingActivity::class.java)
+                startActivity(i)
+                true
+            }
             else -> true
         }
-
-
     }
 
     private fun observeResult(result: Result<*>) {

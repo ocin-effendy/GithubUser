@@ -37,6 +37,7 @@ class DetailUserActivity : AppCompatActivity() {
         detailViewModel = viewModels<DetailViewModel> {
             ViewModelFactory.getInstance(application)
         }.value
+
         detailViewModel.getDetailDataUser(name!!)
 
         detailViewModel.githubDetailUser.observe(this){ result ->

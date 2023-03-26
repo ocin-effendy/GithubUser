@@ -14,5 +14,11 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="Theme.SplashScreenTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="android:windowBackground">@color/white</item>
+        <item name="colorPrimaryVariant">@color/black</item>
+    </style>
+
 
 </resources>

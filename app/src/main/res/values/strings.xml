@@ -3,6 +3,8 @@
     <string name="search">Search</string>
     <string name="favorite">Favorite</string>
     <string name="setting">Setting</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="logo">Github Logo</string>
     <string name="search_hint">Masukkan kata</string>
     <string name="name_profile">Name Profile</string>
     <string name="login_profile">Login Profile</string>
