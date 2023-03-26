@@ -8,10 +8,10 @@ import java.util.concurrent.Executors
 
 object Injection {
 
-    fun provideRepository(context: Context) : GithubUserRepository{
+    fun provideRepository(context: Context): GithubUserRepository {
         val apiService = ApiConfig.getApiService()
         val database = FavoriteUserRoomDatabase.getInstance(context)
-        val dao =database.favoriteUserDao()
+        val dao = database.favoriteUserDao()
         val executorService = Executors.newSingleThreadExecutor()
         return GithubUserRepository.getInstance(apiService, dao, executorService)
 

@@ -13,9 +13,9 @@ class ViewModelFactory private constructor(private val githubUserRepository: Git
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             return MainViewModel(githubUserRepository) as T
-        }else if(modelClass.isAssignableFrom(DetailViewModel::class.java)){
+        } else if (modelClass.isAssignableFrom(DetailViewModel::class.java)) {
             return DetailViewModel(githubUserRepository) as T
-        }else if(modelClass.isAssignableFrom(FollowViewModel::class.java)){
+        } else if (modelClass.isAssignableFrom(FollowViewModel::class.java)) {
             return FollowViewModel(githubUserRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

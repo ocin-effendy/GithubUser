@@ -2,16 +2,16 @@ package com.example.githubuser.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.githubuser.data.remote.response.ItemsItem
 import com.example.githubuser.adapter.ListUserAdapter
 import com.example.githubuser.data.Result
+import com.example.githubuser.data.remote.response.ItemsItem
 import com.example.githubuser.databinding.FragmentFollowBinding
 
 
@@ -52,17 +52,17 @@ class FollowFragment : Fragment() {
             username = it.getString(ARG_USERNAME)
         }
 
-        if (position == 1){
+        if (position == 1) {
             username?.let { followViewModel.getDataFollowers(it) }
-            followViewModel.followerUser.observe(viewLifecycleOwner){ result ->
-                if(result != null){
+            followViewModel.followerUser.observe(viewLifecycleOwner) { result ->
+                if (result != null) {
                     observeResult(result)
                 }
             }
         } else {
             username?.let { followViewModel.getDataFollowing(it) }
-            followViewModel.followingUser.observe(viewLifecycleOwner){ result ->
-                if(result != null){
+            followViewModel.followingUser.observe(viewLifecycleOwner) { result ->
+                if (result != null) {
                     observeResult(result)
                 }
             }
@@ -70,13 +70,13 @@ class FollowFragment : Fragment() {
 
     }
 
-    private fun setDataList(item: List<ItemsItem>){
+    private fun setDataList(item: List<ItemsItem>) {
         val adapter = ListUserAdapter(item)
         binding.followCard.adapter = adapter
     }
 
     private fun observeResult(result: Result<List<ItemsItem>>) {
-        when(result) {
+        when (result) {
             is Result.Loading -> {
                 binding.progressBar.visibility = View.VISIBLE
             }
@@ -90,7 +90,6 @@ class FollowFragment : Fragment() {
             }
         }
     }
-
 
 
     private fun showRecyclerList() {

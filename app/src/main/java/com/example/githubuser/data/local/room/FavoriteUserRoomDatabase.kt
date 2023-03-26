@@ -7,8 +7,8 @@ import androidx.room.RoomDatabase
 import com.example.githubuser.data.local.entity.FavoriteUser
 
 @Database(entities = [FavoriteUser::class], version = 1)
-abstract class FavoriteUserRoomDatabase: RoomDatabase() {
-    abstract fun favoriteUserDao() : FavoriteUserDao
+abstract class FavoriteUserRoomDatabase : RoomDatabase() {
+    abstract fun favoriteUserDao(): FavoriteUserDao
 
     companion object {
         @Volatile

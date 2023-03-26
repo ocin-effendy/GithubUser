@@ -9,8 +9,9 @@ import com.example.githubuser.data.local.entity.FavoriteUser
 import com.example.githubuser.data.remote.response.DetailUserResponse
 import kotlinx.coroutines.launch
 
-class DetailViewModel(private val githubUserRepository: GithubUserRepository): ViewModel() {
-    lateinit var githubDetailUser : LiveData<Result<DetailUserResponse>>
+class DetailViewModel(private val githubUserRepository: GithubUserRepository) : ViewModel() {
+    lateinit var githubDetailUser: LiveData<Result<DetailUserResponse>>
+
     fun getDetailDataUser(username: String) {
         githubDetailUser = githubUserRepository.dataGithubDetailUser(username)
     }

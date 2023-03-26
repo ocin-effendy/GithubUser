@@ -3,24 +3,25 @@ package com.example.githubuser.ui
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.*
+import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.githubuser.data.remote.response.ItemsItem
 import com.example.githubuser.R
-import com.example.githubuser.data.remote.response.ResponseGithub
 import com.example.githubuser.adapter.ListUserAdapter
-import com.example.githubuser.databinding.ActivityMainBinding
 import com.example.githubuser.data.Result
+import com.example.githubuser.data.remote.response.ItemsItem
+import com.example.githubuser.data.remote.response.ResponseGithub
+import com.example.githubuser.databinding.ActivityMainBinding
 
 @Suppress("DEPRECATION", "COMPATIBILITY_WARNING", "UNCHECKED_CAST")
 class MainActivity : AppCompatActivity() {
@@ -34,9 +35,11 @@ class MainActivity : AppCompatActivity() {
         showRecyclerList()
 
         val pref = SettingPreferences.getInstance(dataStore)
-        val settingViewModel = ViewModelProvider(this, ViewModelFactorySetting(pref))[SettingViewModel::class.java]
+        val settingViewModel =
+            ViewModelProvider(this, ViewModelFactorySetting(pref))[SettingViewModel::class.java]
 
-        settingViewModel.getThemeSettings().observe(this
+        settingViewModel.getThemeSettings().observe(
+            this
         ) { isDarkModeActive: Boolean ->
             if (isDarkModeActive) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -49,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             ViewModelFactory.getInstance(application)
         }.value
 
-        mainViewModel.githubListUser.observe(this){ result ->
+        mainViewModel.githubListUser.observe(this) { result ->
             observeResult(result)
         }
     }
@@ -73,12 +76,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
 
-        fun searchUser(username: String){
+        fun searchUser(username: String) {
             mainViewModel.getSearchDataUser(username)
-            mainViewModel.githubUser.observe(this@MainActivity){ result ->
+            mainViewModel.githubUser.observe(this@MainActivity) { result ->
                 observeResult(result)
             }
         }
+
         val inflater = menuInflater
         inflater.inflate(R.menu.menu_search, menu)
 
@@ -105,13 +109,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId){
-            R.id.favorite ->{
+        return when (item.itemId) {
+            R.id.favorite -> {
                 val i = Intent(this, FavoriteUserActivity::class.java)
                 startActivity(i)
                 true
             }
-            R.id.setting ->{
+            R.id.setting -> {
                 val i = Intent(this, SettingActivity::class.java)
                 startActivity(i)
                 true
@@ -121,16 +125,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeResult(result: Result<*>) {
-        when(result) {
+        when (result) {
             is Result.Loading -> {
                 binding.progressBar.visibility = View.VISIBLE
             }
             is Result.Success -> {
                 binding.progressBar.visibility = View.GONE
                 val data = result.data
-                if(data is ResponseGithub) {
+                if (data is ResponseGithub) {
                     setData(data)
-                } else if(data is List<*>) {
+                } else if (data is List<*>) {
                     setData(data as List<ItemsItem>)
                 }
             }
@@ -138,5 +142,9 @@ class MainActivity : AppCompatActivity() {
                 binding.progressBar.visibility = View.GONE
             }
         }
+    }
+
+    fun getBinding(): ActivityMainBinding {
+        return binding
     }
 }

@@ -3,11 +3,11 @@ package com.example.githubuser.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.githubuser.data.remote.response.ItemsItem
-import com.example.githubuser.data.remote.response.ResponseGithub
 import com.example.githubuser.data.local.entity.FavoriteUser
 import com.example.githubuser.data.local.room.FavoriteUserDao
 import com.example.githubuser.data.remote.response.DetailUserResponse
+import com.example.githubuser.data.remote.response.ItemsItem
+import com.example.githubuser.data.remote.response.ResponseGithub
 import com.example.githubuser.data.remote.retrofit.ApiService
 import retrofit2.Call
 import retrofit2.Callback

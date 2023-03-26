@@ -1,8 +1,8 @@
 package com.example.githubuser.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuser.adapter.ListUserAdapter
@@ -20,11 +20,11 @@ class FavoriteUserActivity : AppCompatActivity() {
 
         showRecyclerList()
 
-        val mainViewModel by viewModels<MainViewModel>{
+        val mainViewModel by viewModels<MainViewModel> {
             ViewModelFactory.getInstance(application)
         }
 
-        mainViewModel.getAllFavoriteUser().observe(this){ result ->
+        mainViewModel.getAllFavoriteUser().observe(this) { result ->
             val users = arrayListOf<ItemsItem>()
             result.map {
                 val item = ItemsItem(login = it.username, avatarUrl = it.avatarUrl.toString())
@@ -34,7 +34,7 @@ class FavoriteUserActivity : AppCompatActivity() {
         }
     }
 
-    private fun setData(users: List<ItemsItem>){
+    private fun setData(users: List<ItemsItem>) {
         val adapter = ListUserAdapter(users)
         binding.viewCard.adapter = adapter
     }

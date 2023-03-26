@@ -40,9 +40,9 @@ class DetailUserActivity : AppCompatActivity() {
 
         detailViewModel.getDetailDataUser(name!!)
 
-        detailViewModel.githubDetailUser.observe(this){ result ->
-            if(result != null){
-                when(result){
+        detailViewModel.githubDetailUser.observe(this) { result ->
+            if (result != null) {
+                when (result) {
                     is Result.Loading -> {
                         binding.progressBar.visibility = View.VISIBLE
                     }
@@ -86,7 +86,8 @@ class DetailUserActivity : AppCompatActivity() {
                     setFavoriteButtonImage(!isFavorite)
                     if (isFavorite) {
                         detailViewModel.deleteFavoriteUser(dataFavorite)
-                        Toast.makeText(this, "remove $name from favorite", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "remove $name from favorite", Toast.LENGTH_SHORT)
+                            .show()
                     } else {
                         detailViewModel.saveFavoriteUser(dataFavorite)
                         Toast.makeText(this, "Add $name to favorite", Toast.LENGTH_SHORT).show()
@@ -97,12 +98,13 @@ class DetailUserActivity : AppCompatActivity() {
     }
 
     private fun setFavoriteButtonImage(isFavorite: Boolean) {
-        val drawable = if (isFavorite) R.drawable.ic_baseline_favorite_24 else R.drawable.ic_baseline_favorite_border_24
+        val drawable =
+            if (isFavorite) R.drawable.ic_baseline_favorite_24 else R.drawable.ic_baseline_favorite_border_24
         fab.setImageDrawable(ContextCompat.getDrawable(fab.context, drawable))
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setDataDetailUser(item: DetailUserResponse){
+    private fun setDataDetailUser(item: DetailUserResponse) {
         Glide.with(this)
             .load(item.avatarUrl)
             .into(binding.imageProfile)
@@ -129,7 +131,8 @@ class DetailUserActivity : AppCompatActivity() {
 
     companion object {
         const val USER = "USER"
-        const val AVATARURL ="AVATARURL"
+        const val AVATARURL = "AVATARURL"
+
         @StringRes
         private val TAB_POSITION = intArrayOf(
             R.string.tab_text_1,
